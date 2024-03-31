@@ -1,18 +1,15 @@
 package com.study.medic.healersproject.domain;
 
 import com.study.medic.healersproject.app.api.AggregationRoot;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "department")
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 public class Department extends DomainObject implements AggregationRoot {
     @Column(name = "name", nullable = false)
@@ -20,9 +17,24 @@ public class Department extends DomainObject implements AggregationRoot {
     @Column(name = "description")
     private String description;
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Doctor> doctors = new ArrayList<>();
+    private List<Doctor> doctors ;
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkingSlot> workingSlots = new ArrayList<>();
+    private List<WorkingSlot> workingSlots;
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Appointment> appointments = new ArrayList<>();
+    private List<Appointment> appointments;
+
+    protected Department() {
+        throw new UnsupportedOperationException("Creation via default constructor is not valid!");
+    }
+
+    public Department create(String name, String description, List<Doctor> doctors,
+                             List<WorkingSlot> workingSlots, List<Appointment> appointments) {
+        return Department.builder()
+                .name(name)
+                .description(description)
+                .workingSlots(workingSlots)
+                .doctors(doctors)
+                .appointments(appointments)
+                .build();
+    }
 }
