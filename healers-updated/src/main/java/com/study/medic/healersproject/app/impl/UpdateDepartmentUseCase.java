@@ -21,6 +21,7 @@ public class UpdateDepartmentUseCase implements UpdateDepartmentInbound {
     @Override
     @Transactional
     public Department update(String dayOfWeek, LocalDateTime startTime, LocalDateTime endTime, Long doctorId) {
+        log.info("Updating department by doctor id: {}", doctorId);
         Department department = departmentRepository.getDepartmentByDoctorId(doctorId);
         Doctor doctor = department.getDoctors().stream().filter(doc -> doctorId.equals(doc.getId()))
                 .findFirst().orElseThrow(() -> new DoctorNotFoundException(doctorId));
