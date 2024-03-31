@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: healers-strategy
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+server:
+  port: 8095
+
