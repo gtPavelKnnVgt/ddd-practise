@@ -1,18 +1,19 @@
 package com.study.medic.healersproject.domain;
 
+import com.study.medic.healersproject.app.api.Aggregator;
 import com.study.medic.healersproject.app.api.PatientAcceptedException;
 import com.study.medic.healersproject.app.api.UnexpectedTimeSlotReserve;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "appointment")
 @Builder
 @Getter
-public class Appointment extends DomainObject {
+public class Appointment extends DomainObject implements Aggregator {
     @OneToOne
     @JoinColumn(name = "working_slot_id")
     private WorkingSlot workingSlot;
@@ -22,11 +23,6 @@ public class Appointment extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
-
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
 
     protected Appointment() {
         throw new UnsupportedOperationException("Creation via default constructor is not valid!");
@@ -49,11 +45,9 @@ public class Appointment extends DomainObject {
                 .build();
     }
 
-    public void reserve(Patient patient, WorkingSlot workingSlot) {
-        if (patient.hasAppointment(workingSlot.getTimeSlot())) {
+    public static void tryToReserve(Patient patient, WorkingSlot workingSlot, List<Appointment> appointments) {
+        if (patient.hasAppointment(workingSlot.getTimeSlot(), appointments)) {
             throw new IllegalStateException("Patient already has an appointment reservation for this time slot.");
         }
-        this.patient = patient;
-        this.workingSlot = workingSlot;
     }
 }

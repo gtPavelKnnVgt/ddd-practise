@@ -18,4 +18,15 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         return departmentJpaRepository.findByDoctorsIn(List.of(doctorId))
                 .orElseThrow(() -> new DepartmentNotFoundException(doctorId));
     }
+
+    @Override
+    public Department saveAndFlush(Department department) {
+        return departmentJpaRepository.saveAndFlush(department);
+    }
+
+    @Override
+    public Department getById(Long departmentId) {
+        return departmentJpaRepository.findById(departmentId)
+                .orElseThrow(() -> new DepartmentNotFoundException(departmentId));
+    }
 }

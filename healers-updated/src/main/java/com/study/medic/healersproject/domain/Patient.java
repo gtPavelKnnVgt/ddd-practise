@@ -1,12 +1,16 @@
 package com.study.medic.healersproject.domain;
 
+import com.study.medic.healersproject.app.api.Aggregator;
 import com.study.medic.healersproject.app.api.PatientNotValidException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,7 +21,7 @@ import java.util.regex.Pattern;
 @Builder
 @Getter
 @Slf4j
-public class Patient extends DomainObject {
+public class Patient extends DomainObject implements Aggregator {
     private static final String NAME_REGEX = "^[A-Za-z\\s]+$";
     private static final String NOT_VALID_RECORD_NUMBERS = "^(?!FHWR).*$";
 
@@ -29,8 +33,6 @@ public class Patient extends DomainObject {
     private LocalDate birthDate;
     @Column(name = "medical_record_number")
     private String medicalRecordNumber;
-    @OneToMany(mappedBy = "patient")
-    private List<Appointment> appointments;
     @Transient
     @Setter
     private boolean isAccepted;
@@ -39,7 +41,7 @@ public class Patient extends DomainObject {
         throw new UnsupportedOperationException("Creation via default constructor is not valid!");
     }
 
-    public boolean hasAppointment(TimeSlot timeSlot) {
+    public boolean hasAppointment(TimeSlot timeSlot, List<Appointment> appointments) {
         return appointments.stream()
                 .anyMatch(appointment -> appointment.getWorkingSlot().getTimeSlot().overlaps(timeSlot));
     }

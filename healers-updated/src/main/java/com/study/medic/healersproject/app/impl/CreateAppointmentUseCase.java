@@ -7,9 +7,10 @@ import com.study.medic.healersproject.domain.WorkingSlot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,17 @@ public class CreateAppointmentUseCase implements CreateAppointmentInbound {
         patient.setAccepted(isAccepted);
         var appointment = Appointment.create(patient, doctor, workingSlot);
         return appointmentRepository.saveAndFlush(appointment);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void validate(Long patientId, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek, boolean isAccepted) {
+        log.info("Validation of creation appointment by patient id: {}", patientId);
+        var patient = patientRepository.getById(patientId);
+        var validatedTimeSlot = TimeSlot.create(startTime, endTime);
+        WorkingSlot workingSlot = WorkingSlot.create(dayOfWeek, validatedTimeSlot);
+        patient.setAccepted(isAccepted);
+        List<Appointment> appointmentsForCheck = appointmentRepository.findByPatientId(patientId);
+        Appointment.tryToReserve(patient, workingSlot, appointmentsForCheck);
     }
 }

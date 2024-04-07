@@ -2,9 +2,6 @@ package com.study.medic.healersproject.adapter.rest.v1;
 
 import com.study.medic.healersproject.adapter.rest.v1.dto.CreateDoctorDto;
 import com.study.medic.healersproject.adapter.rest.v1.dto.ResponseDto;
-import com.study.medic.healersproject.app.api.CreateDoctorInbound;
-import com.study.medic.healersproject.domain.TimeSlot;
-import com.study.medic.healersproject.domain.WorkingSlot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

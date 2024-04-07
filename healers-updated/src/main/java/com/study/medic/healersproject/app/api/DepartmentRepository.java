@@ -16,4 +16,11 @@ public interface DepartmentRepository {
      * @return сохраненный департамент
      */
     Department saveAndFlush(Department department);
+
+    /**
+     * Получить отделение по идентификатору
+     * @param departmentId идентификатор отделения
+     * @return найденное отделение
+     */
+    Department getById(Long departmentId);
 }

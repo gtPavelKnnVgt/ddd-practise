@@ -32,8 +32,6 @@ public class Doctor extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "working_slot_id")
     private WorkingSlot workingSlot;
-    @OneToMany(mappedBy = "doctor")
-    private List<Appointment> appointments;
 
     @Setter
     @ManyToOne
@@ -44,8 +42,8 @@ public class Doctor extends DomainObject {
         throw new UnsupportedOperationException("Creation via default constructor is not valid!");
     }
 
-    public void updateAvailability(WorkingSlot newWorkingSlot) {
-        List<Appointment> conflictingAppointments = appointments.stream()
+    public void updateAvailability(WorkingSlot newWorkingSlot, List<Appointment> appointmentsForCheck) {
+        List<Appointment> conflictingAppointments = appointmentsForCheck.stream()
                 .filter(appointment -> !appointment.getWorkingSlot().getTimeSlot().overlaps(newWorkingSlot.getTimeSlot()))
                 .toList();
 

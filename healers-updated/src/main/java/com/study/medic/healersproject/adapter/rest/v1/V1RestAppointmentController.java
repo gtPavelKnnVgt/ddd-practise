@@ -24,4 +24,11 @@ public class V1RestAppointmentController {
                 dto.getDoctorId(), startTime, endTime, dto.getDayOfWeek(), dto.getIsAccepted());
         return new ResponseDto(appointment.getId());
     }
+
+    @PostMapping("validate/by-patient")
+    public void validateByPatient(@RequestBody CreateAppointmentDto dto) {
+        LocalDateTime startTime = dto.getTimeSlotToReserve().getStartTime();
+        LocalDateTime endTime = dto.getTimeSlotToReserve().getEndTime();
+        createAppointmentInbound.validate(dto.getPatientId(), startTime, endTime, dto.getDayOfWeek(), dto.getIsAccepted());
+    }
 }

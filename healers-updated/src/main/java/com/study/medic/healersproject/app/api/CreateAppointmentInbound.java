@@ -18,4 +18,15 @@ public interface CreateAppointmentInbound {
      * @return созданная запись
      */
     Appointment create(Long patientId, Long doctorId, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek, boolean isAccepted);
+
+    /**
+     * Проверить возможно ли создание записи для пациента
+     * В случае невозможности - выбрасывать исключение
+     * @param patientId идентификатор пациента
+     * @param startTime время начала записи
+     * @param endTime время окончания записи
+     * @param dayOfWeek день недели
+     * @param isAccepted принял ли пациент эту запись
+     */
+    void validate(Long patientId,  LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek, boolean isAccepted);
 }

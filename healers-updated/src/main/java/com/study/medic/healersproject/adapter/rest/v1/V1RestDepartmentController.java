@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class V1RestDepartmentController {
     private final UpdateDepartmentInbound updateDepartmentInbound;
 
-    @PostMapping
+    @PostMapping("/by-doctor")
     public ResponseDto updateDepartment(@RequestBody UpdateDepartmentDto dto) {
         Department department = updateDepartmentInbound.update(dto.getWorkingSlotDto().getDayOfWeek(), dto.getWorkingSlotDto().getTimeSlot().getStartTime(),
                 dto.getWorkingSlotDto().getTimeSlot().getEndTime(), dto.getDoctorId());
